@@ -13,8 +13,8 @@ try(){
     fi
 }
 
-try 1 0+1
-try 38 32+6
-try 5 9-4
-try 8 8+5-10+5
+try 1 '0 +  1'
+try 38 '32 +    6'
+try 5 '9-4'
+try 8 ' 8 + 5  - 10  + 5'
 echo ok
