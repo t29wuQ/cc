@@ -4,13 +4,13 @@ enum{
     TK_EOF //End marker
 };
 
+#ifndef CC_H
+#define CC_H
 typedef struct{
     int ty; //token type (ASCII code)
     int val; //token value (only integer)
     char *input; //token str(error message)
 } Token;
-
-Token tokens[100];
 
 typedef struct Node{
     int ty;
@@ -20,8 +20,10 @@ typedef struct Node{
     char name;
 } Node;
 
-Node *code[100];
+extern Token tokens[100];
+extern Node *code[100];
 
 void tokenize(char *p);
 void program();
 void gen(Node *node);
+#endif

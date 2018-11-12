@@ -3,6 +3,8 @@
 #include<ctype.h>
 #include "cc.h"
 
+Token tokens[100];
+
 void tokenize(char *p){
     int i = 0;
     while(*p){

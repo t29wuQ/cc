@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include "cc.h"
 
+Node *code[100];
+
 Node *new_node(int op, Node *lhs, Node *rhs){
     Node *node = (Node*)malloc(sizeof(Node));
     node->ty = op;
