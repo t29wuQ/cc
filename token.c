@@ -3,10 +3,10 @@
 #include<ctype.h>
 #include "cc.h"
 
-Token tokens[100];
+Vector *tokens;
 
 void tokenize(char *p){
-    int i = 0;
+    Token *token;
     while(*p){
         if (isspace(*p)){
             p++;
@@ -17,25 +17,28 @@ void tokenize(char *p){
          *p == '*' || *p == '/' ||
          *p == '(' || *p == ')' ||
          *p == '=' || *p == ';'){
-            tokens[i].ty = *p;
-            tokens[i].input = p;
+            token = (Token *)malloc(sizeof(Token));
+            token->ty = *p;
+            token->input = p;
+            vec_push(tokens, token);
             p++;
-            i++;
             continue;
         }
 
         if (isdigit(*p)) {
-            tokens[i].ty = TK_NUM;
-            tokens[i].input = p;
-            tokens[i].val = strtol(p, &p, 10);
-            i++;
+            token = (Token *)malloc(sizeof(Token));
+            token->ty = TK_NUM;
+            token->input = p;
+            token->val = strtol(p, &p, 10);
+            vec_push(tokens, token);
             continue;
         }
 
         if ('a' <= *p && *p <= 'z'){
-            tokens[i].ty = TK_IDENT;
-            tokens[i].input = p;
-            i++;
+            token = (Token *)malloc(sizeof(Token));
+            token->ty = TK_IDENT;
+            token->input = p;
+            vec_push(tokens, token);
             p++;
             continue;
         }
@@ -44,6 +47,8 @@ void tokenize(char *p){
         exit(1);
     }
 
-    tokens[i].ty = TK_EOF;
-    tokens[i].input = p;
+    token = (Token *)malloc(sizeof(Token));
+    token->ty = TK_EOF;
+    token->input = p;
+    vec_push(tokens, token);
 }

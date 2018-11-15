@@ -7,6 +7,7 @@ int main(int argc, char **argv){
         return 1;
     }
     
+    tokens = new_vector();
     tokenize(argv[1]);
     program();
 

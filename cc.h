@@ -20,9 +20,22 @@ typedef struct Node{
     char name;
 } Node;
 
-extern Token tokens[100];
+typedef struct{
+    void **data;
+    int capacity;
+    int len;
+} Vector;
+
+typedef struct{
+    Vector *keys;
+    Vector *vals;
+} Map;
+
+extern Vector *tokens;
 extern Node *code[100];
 
+Vector *new_vector();
+void vec_push(Vector *vec, void *elem);
 void tokenize(char *p);
 void program();
 void gen(Node *node);

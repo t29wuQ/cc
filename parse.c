@@ -37,18 +37,18 @@ int c_pos = 0;
 void program(){
     Node *lhs = assign();
     code[c_pos++] = lhs;
-    if (tokens[pos].ty == TK_EOF)
+    if (((Token*)(tokens->data[pos]))->ty == TK_EOF)
         return;
     program();
 }
 
 Node* assign(){
     Node* lhs = expr();
-    if (tokens[pos].ty == ';'){
+    if (((Token*)(tokens->data[pos]))->ty == ';'){
         pos++;
         return lhs;
     }
-    if (tokens[pos].ty == '='){
+    if (((Token*)(tokens->data[pos]))->ty == '='){
         pos++;
         return  new_node('=', lhs, assign());
     }
@@ -57,13 +57,13 @@ Node* assign(){
 
 Node* expr(){
     Node* lhs = mul();
-    if (tokens[pos].ty == ')')
+    if (((Token*)(tokens->data[pos]))->ty == ')')
         return lhs;
-    if (tokens[pos].ty == '+'){
+    if (((Token*)(tokens->data[pos]))->ty == '+'){
         pos++;
         return new_node('+', lhs, expr());
     }
-    if (tokens[pos].ty == '-'){
+    if (((Token*)(tokens->data[pos]))->ty == '-'){
         pos++;
         return new_node('-', lhs, expr());
     }
@@ -72,13 +72,13 @@ Node* expr(){
 
 Node* mul(){
     Node *lhs = term();
-    if (tokens[pos].ty == TK_EOF)
+    if (((Token*)(tokens->data[pos]))->ty == TK_EOF)
         return lhs;
-    if (tokens[pos].ty == '*'){
+    if (((Token*)(tokens->data[pos]))->ty == '*'){
         pos++;
         return new_node('*', lhs, mul());
     }
-    if (tokens[pos].ty == '/'){
+    if (((Token*)(tokens->data[pos]))->ty == '/'){
         pos++;
         return new_node('/', lhs, mul());
     }
@@ -86,15 +86,15 @@ Node* mul(){
 }
 
 Node* term(){
-    if (tokens[pos].ty == TK_NUM)  
-        return new_node_num(tokens[pos++].val);
-    if (tokens[pos].ty == TK_IDENT)
-        return new_node_ident(tokens[pos++].input);
-    if (tokens[pos].ty == '('){
+    if (((Token*)(tokens->data[pos]))->ty == TK_NUM)  
+        return new_node_num(((Token*)(tokens->data[pos++]))->val);
+    if (((Token*)(tokens->data[pos]))->ty == TK_IDENT)
+        return new_node_ident(((Token*)(tokens->data[pos++]))->input);
+    if (((Token*)(tokens->data[pos]))->ty == '('){
         pos++;
         Node *node = expr();
         pos++;
         return node;
     }
-    fprintf(stderr, "数値でも開きカッコでもないトークンです: %s", tokens[pos].input);
+    fprintf(stderr, "数値でも開きカッコでもないトークンです: %d,  %s", pos, ((Token*)(tokens->data[pos]))->input);
 }
