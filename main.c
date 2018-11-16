@@ -9,6 +9,7 @@ int main(int argc, char **argv){
     
     tokens = new_vector();
     tokenize(argv[1]);
+    code = new_vector();
     program();
 
     printf(".intel_syntax noprefix\n");
@@ -19,8 +20,8 @@ int main(int argc, char **argv){
     printf("\tmov rbp, rsp\n");
     printf("\tsub rsp, 208\n");
 
-    for (int i = 0;code[i];i++){
-        gen(code[i]);
+    for (int i = 0;i < code->len;i++){
+        gen((Node *)(code->data[i]));
         printf("\tpop rax\n");
     }
 

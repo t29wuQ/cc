@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "cc.h"
 
-Node *code[100];
+Vector *code;
 
 Node *new_node(int op, Node *lhs, Node *rhs){
     Node *node = (Node*)malloc(sizeof(Node));
@@ -32,11 +32,10 @@ Node* mul();
 Node* term();
 
 int pos = 0;
-int c_pos = 0;
 
 void program(){
     Node *lhs = assign();
-    code[c_pos++] = lhs;
+    vec_push(code, lhs);
     if (((Token*)(tokens->data[pos]))->ty == TK_EOF)
         return;
     program();

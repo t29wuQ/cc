@@ -32,7 +32,7 @@ typedef struct{
 } Map;
 
 extern Vector *tokens;
-extern Node *code[100];
+extern Vector *code;
 
 Vector *new_vector();
 void vec_push(Vector *vec, void *elem);
