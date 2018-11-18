@@ -1,6 +1,3 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
 #include "cc.h"
 
 Vector *new_vector(){
@@ -20,6 +17,8 @@ void vec_push(Vector *vec, void *elem){
     vec->data[vec->len++] = elem;
 }
 
+
+
 Map *new_map(){
     Map *map = malloc(sizeof(Map));
     map->keys = new_vector();
@@ -30,6 +29,16 @@ Map *new_map(){
 void map_put(Map *map, char *key, void *val){
     vec_push(map->keys, key);
     vec_push(map->vals, val);
+}
+
+void map_put_token(Map *map, char *key, int ty, int val, char *input){
+    Token* token = (Token *)malloc(sizeof(token));
+    token->ty = ty;
+    if (ty == TK_IDENT)
+        token->val = val;
+    else
+        token->input = input;
+    map_put(map, key, token);
 }
 
 void *map_get(Map *map, char *key){

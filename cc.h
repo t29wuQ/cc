@@ -1,3 +1,8 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+
 enum{
     TK_NUM = 256, //Number literal
     TK_IDENT, //Identifier
@@ -7,8 +12,9 @@ enum{
 #ifndef CC_H
 #define CC_H
 typedef struct{
-    int ty; //token type (ASCII code)
-    int val; //token value (only integer)
+    int ty; //Token type
+    int val; //Number value(only number literal)
+    char *name; //Identifer name
     char *input; //token str(error message)
 } Token;
 
@@ -17,7 +23,7 @@ typedef struct Node{
     struct Node *lhs;
     struct Node *rhs;
     int val;
-    char name;
+    char *name;
 } Node;
 
 typedef struct{
@@ -33,10 +39,15 @@ typedef struct{
 
 extern Vector *tokens;
 extern Vector *code;
+extern Vector *variables;
 
 Vector *new_vector();
 void vec_push(Vector *vec, void *elem);
+void map_put(Map *map, char *key, void *val);
+void *map_get(Map *map, char *key);
+
 void tokenize(char *p);
 void program();
+int get_variable(char *name);
 void gen(Node *node);
 #endif

@@ -1,4 +1,3 @@
-#include<stdio.h>
 #include "cc.h"
 
 int main(int argc, char **argv){
@@ -8,6 +7,7 @@ int main(int argc, char **argv){
     }
     
     tokens = new_vector();
+    variables = new_vector();
     tokenize(argv[1]);
     code = new_vector();
     program();
@@ -18,7 +18,7 @@ int main(int argc, char **argv){
 
     printf("\tpush rbp\n");
     printf("\tmov rbp, rsp\n");
-    printf("\tsub rsp, 208\n");
+    printf("\tsub rsp, %d\n", variables->len * 8);
 
     for (int i = 0;i < code->len;i++){
         gen((Node *)(code->data[i]));

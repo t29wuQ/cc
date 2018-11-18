@@ -13,6 +13,7 @@ try(){
     fi
 }
 
-try 35 'z = 6;z = 4;a = 3;(z    +  a) *5;'
-try 18 'b = 3;(b +    6) * 2;'
+try 45 'abcd = 6;efgh = 3;(abcd    +  efgh) *5;'
+try 18 'b2  = 3;(b2 +    6) * 2;'
+try 25 'len = 0;len = 2 + 3;len * 5'
 echo ok

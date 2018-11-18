@@ -1,6 +1,3 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<ctype.h>
 #include "cc.h"
 
 Vector *tokens;
@@ -34,12 +31,17 @@ void tokenize(char *p){
             continue;
         }
 
-        if ('a' <= *p && *p <= 'z'){
+        if (isalpha(*p) || *p == '_'){
             token = (Token *)malloc(sizeof(Token));
             token->ty = TK_IDENT;
-            token->input = p;
+            int name_len = 1;
+            while(isalnum(*(p + name_len)) ||  *(p + name_len) == '_')
+                name_len++;
+            token->name = strndup(p, name_len);
             vec_push(tokens, token);
-            p++;
+            if (get_variable(token->name) < 0)
+                vec_push(variables, token->name);
+            p += name_len;
             continue;
         }
 

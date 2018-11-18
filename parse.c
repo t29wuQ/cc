@@ -1,5 +1,3 @@
-#include<stdio.h>
-#include <stdlib.h>
 #include "cc.h"
 
 Vector *code;
@@ -22,8 +20,12 @@ Node *new_node_num(int val){
  Node *new_node_ident(char *name){
      Node *node = (Node*)malloc(sizeof(Node));
      node->ty = TK_IDENT;
-     node->name = *name;
-     return node;
+     node->name = name;
+    // fprintf(stderr, "ok5:\n");
+    // if (name == node->name)
+    //      fprintf(stderr, "ok333:\n");
+    // fprintf(stderr, "test555: %d\n", strlen(name));
+    return node;
  }
 
 Node* assign();
@@ -88,7 +90,7 @@ Node* term(){
     if (((Token*)(tokens->data[pos]))->ty == TK_NUM)  
         return new_node_num(((Token*)(tokens->data[pos++]))->val);
     if (((Token*)(tokens->data[pos]))->ty == TK_IDENT)
-        return new_node_ident(((Token*)(tokens->data[pos++]))->input);
+        return new_node_ident(((Token*)(tokens->data[pos++]))->name);
     if (((Token*)(tokens->data[pos]))->ty == '('){
         pos++;
         Node *node = expr();
