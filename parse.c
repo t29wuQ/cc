@@ -2,7 +2,7 @@
 
 Vector *code;
 
-Node *new_node(int op, Node *lhs, Node *rhs){
+static Node *new_node(int op, Node *lhs, Node *rhs){
     Node *node = (Node*)malloc(sizeof(Node));
     node->ty = op;
     node->lhs = lhs;
@@ -10,40 +10,49 @@ Node *new_node(int op, Node *lhs, Node *rhs){
     return node;
 }
 
-Node *new_node_num(int val){
+static Node *new_node_num(int val){
      Node *node = (Node*)malloc(sizeof(Node));
      node->ty = TK_NUM;
      node->val = val;
      return node;
  }
 
- Node *new_node_ident(char *name){
+ static Node *new_node_ident(char *name){
      Node *node = (Node*)malloc(sizeof(Node));
      node->ty = TK_IDENT;
      node->name = name;
-    // fprintf(stderr, "ok5:\n");
-    // if (name == node->name)
-    //      fprintf(stderr, "ok333:\n");
-    // fprintf(stderr, "test555: %d\n", strlen(name));
     return node;
  }
 
-Node* assign();
-Node* expr();
-Node* mul();
-Node* term();
+static Node* statement();
+static Node* assign();
+static Node* expr();
+static Node* mul();
+static Node* term();
 
 int pos = 0;
+Vector *tokens;
 
-void program(){
-    Node *lhs = assign();
+void program(Vector *t){
+    tokens = t;
+    Node *lhs = statement();
     vec_push(code, lhs);
     if (((Token*)(tokens->data[pos]))->ty == TK_EOF)
         return;
-    program();
+    program(t);
 }
 
-Node* assign(){
+static Node* statement(){
+    if(((Token*)(tokens->data[pos]))->ty == TK_RETURN){
+        pos++;
+        Node* lhs = assign();
+        ((Token*)(tokens->data[pos]))->ty = TK_EOF;
+        return lhs;
+    }
+    return assign();
+}
+
+static Node* assign(){
     Node* lhs = expr();
     if (((Token*)(tokens->data[pos]))->ty == ';'){
         pos++;
@@ -56,7 +65,7 @@ Node* assign(){
     return lhs;
 }
 
-Node* expr(){
+static Node* expr(){
     Node* lhs = mul();
     if (((Token*)(tokens->data[pos]))->ty == ')')
         return lhs;
@@ -71,7 +80,7 @@ Node* expr(){
     return lhs;
 }
 
-Node* mul(){
+static Node* mul(){
     Node *lhs = term();
     if (((Token*)(tokens->data[pos]))->ty == TK_EOF)
         return lhs;
@@ -86,11 +95,11 @@ Node* mul(){
     return lhs;
 }
 
-Node* term(){
+static Node* term(){
     if (((Token*)(tokens->data[pos]))->ty == TK_NUM)  
         return new_node_num(((Token*)(tokens->data[pos++]))->val);
     if (((Token*)(tokens->data[pos]))->ty == TK_IDENT)
-        return new_node_ident(((Token*)(tokens->data[pos++]))->name);
+        return new_node_ident(((Token*)(tokens->data[pos++]))->input);
     if (((Token*)(tokens->data[pos]))->ty == '('){
         pos++;
         Node *node = expr();

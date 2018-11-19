@@ -6,11 +6,9 @@ int main(int argc, char **argv){
         return 1;
     }
     
-    tokens = new_vector();
     variables = new_vector();
-    tokenize(argv[1]);
     code = new_vector();
-    program();
+    program(tokenize(argv[1]));
 
     printf(".intel_syntax noprefix\n");
     printf(".global _main\n");

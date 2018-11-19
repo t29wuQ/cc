@@ -6,6 +6,7 @@
 enum{
     TK_NUM = 256, //Number literal
     TK_IDENT, //Identifier
+    TK_RETURN, //return
     TK_EOF //End marker
 };
 
@@ -14,8 +15,7 @@ enum{
 typedef struct{
     int ty; //Token type
     int val; //Number value(only number literal)
-    char *name; //Identifer name
-    char *input; //token str(error message)
+    char *input; //token str(Identifer name)
 } Token;
 
 typedef struct Node{
@@ -37,17 +37,17 @@ typedef struct{
     Vector *vals;
 } Map;
 
-extern Vector *tokens;
 extern Vector *code;
 extern Vector *variables;
 
 Vector *new_vector();
 void vec_push(Vector *vec, void *elem);
+Map *new_map();
 void map_put(Map *map, char *key, void *val);
 void *map_get(Map *map, char *key);
 
-void tokenize(char *p);
-void program();
+Vector *tokenize(char *p);
+void program(Vector *tokens);
 int get_variable(char *name);
 void gen(Node *node);
 #endif
