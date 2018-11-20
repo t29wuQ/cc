@@ -7,6 +7,9 @@ enum{
     TK_NUM = 256, //Number literal
     TK_IDENT, //Identifier
     TK_RETURN, //return
+    //TK_IF, //if
+    TK_EQUAL, //==
+    TK_NEQUAL, //!=
     TK_EOF //End marker
 };
 

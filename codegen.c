@@ -42,7 +42,18 @@ void gen(Node *node){
         printf("\tmov [rax], rdi\n"); //move value to variable address
         printf("\tpush rdi\n"); //push value
         return;
-        
+    }
+
+    if (node->ty == TK_EQUAL || node->ty == TK_NEQUAL){
+        gen(node->lhs);
+        gen(node->rhs);
+
+        // printf("\tpop rdi\n");
+        // printf("\tpop rax\n");
+        // printf("\tcmp rdi, rax\n");
+        // printf("\tsete al\n");
+        // printf("\tmovzb rax, al\n");
+        return;
     }
 
     gen(node->lhs);

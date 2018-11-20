@@ -58,9 +58,12 @@ static Node* assign(){
         pos++;
         return lhs;
     }
-    if (((Token*)(tokens->data[pos]))->ty == '='){
+    if (((Token*)(tokens->data[pos]))->ty == '=' ||
+    ((Token*)(tokens->data[pos]))->ty == TK_EQUAL ||
+    ((Token*)(tokens->data[pos]))->ty == TK_NEQUAL){
+        int ty = ((Token *)(tokens->data[pos]))->ty;
         pos++;
-        return  new_node('=', lhs, assign());
+        return  new_node(ty, lhs, assign());
     }
     return lhs;
 }

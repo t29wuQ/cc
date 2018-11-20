@@ -19,9 +19,25 @@ static Vector *scan(char *p){
             continue;
         }
 
-        if (strchr("+-*/=;()", *p)){
+        if (strchr("+-*/;()", *p)){
             add_token(tokens, *p, p);
             p++;
+            continue;
+        }
+
+        if (*p == '='){
+            p++;
+            if (*p != '=')
+                add_token(tokens, *(p - 1), p);
+            else
+                add_token(tokens, TK_EQUAL, p++);
+            continue;
+        }
+
+        if (*p == '!'){
+            p++;
+            if (*p == '=')
+                add_token(tokens, TK_NEQUAL, p++);
             continue;
         }
 
@@ -34,7 +50,7 @@ static Vector *scan(char *p){
         if (isalpha(*p) || *p == '_'){
             int len = 1;
             while(isalnum(*(p + len)) ||  *(p + len) == '_')
-                len++;
+                len++; 
             char *name = strndup(p, len);
             int ty = (intptr_t)map_get(keywords, name);
             if (!ty)
@@ -57,5 +73,6 @@ static Vector *scan(char *p){
 Vector *tokenize(char *p){
     keywords = new_map();
     map_put(keywords, "return", (void *)TK_RETURN);
+    //map_put(keywords, "if", TK_IF);
     return scan(p);
 }
