@@ -7,7 +7,9 @@ enum{
     TK_NUM = 256, //Number literal
     TK_IDENT, //Identifier
     TK_RETURN, //return
-    //TK_IF, //if
+    TK_IF, //if
+    Tk_IF_START, //if start
+    TK_IF_END, //if end
     TK_EQUAL, //==
     TK_NEQUAL, //!=
     TK_EOF //End marker
@@ -40,8 +42,11 @@ typedef struct{
     Vector *vals;
 } Map;
 
-extern Vector *code;
+extern Vector *main_code;
+extern Vector *sub_code;
 extern Vector *variables;
+extern Vector *if_component_number;
+extern int l_num;
 
 Vector *new_vector();
 void vec_push(Vector *vec, void *elem);

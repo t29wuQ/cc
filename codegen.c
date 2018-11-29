@@ -1,12 +1,28 @@
 #include "cc.h"
 
 Vector *variables;
+int l_pos = 1;
+int if_pos = 0;
 
 int get_variable(char *name){
     for (int i = 0;i < variables->len;i++)
         if (!strcmp(name, (char *)(variables->data[i])))
             return i + 1;
     return -1;
+}
+
+void gen_branch(Node *node){
+    gen(node->lhs);
+    gen(node->rhs);
+    printf("\tpop rdi\n");
+    printf("\tpop rax\n");
+    printf("\tcmp rdi, rax\n");
+    if (node->ty == TK_EQUAL)
+        printf("\tje .L%d\n", l_pos++);
+    if (node->ty == TK_NEQUAL)
+        printf("\tjne .L%d\n", l_pos++);
+    printf("\tjmp .L%d\n", ((int)if_component_number->data[if_pos] * 2 + 1) - l_pos);
+    printf("\n.L%d:\n", l_pos - 1);
 }
 
 void gen_lval(Node *node){
@@ -53,6 +69,16 @@ void gen(Node *node){
         // printf("\tcmp rdi, rax\n");
         // printf("\tsete al\n");
         // printf("\tmovzb rax, al\n");
+        return;
+    }
+
+    if (node->ty == TK_IF){
+        gen_branch(node->lhs);
+        return;
+    }
+
+    if (node->ty == TK_RETURN){
+        gen(node->lhs);
         return;
     }
 

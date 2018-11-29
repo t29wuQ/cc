@@ -1,6 +1,10 @@
 #include "cc.h"
 
-Vector *code;
+Vector *main_code;
+Vector *sub_code;
+int l_num = 1;
+Vector *if_component_number;
+int brackets;
 
 static Node *new_node(int op, Node *lhs, Node *rhs){
     Node *node = (Node*)malloc(sizeof(Node));
@@ -25,6 +29,7 @@ static Node *new_node_num(int val){
  }
 
 static Node* statement();
+static void compound_statement();
 static Node* assign();
 static Node* expr();
 static Node* mul();
@@ -36,20 +41,53 @@ Vector *tokens;
 void program(Vector *t){
     tokens = t;
     Node *lhs = statement();
-    vec_push(code, lhs);
+    vec_push(main_code, lhs);
     if (((Token*)(tokens->data[pos]))->ty == TK_EOF)
         return;
     program(t);
 }
 
 static Node* statement(){
+    if(((Token*)(tokens->data[pos]))->ty == TK_IF){
+        pos++;
+        if_component_number->data[if_component_number->len - 1]++;
+        if (((Token*)(tokens->data[pos]))->ty == '('){
+            pos++;
+            Node *lhs = assign();
+            if (((Token*)(tokens->data[pos]))->ty == ')'){
+                pos++;
+                l_num += 2;
+                if (((Token*)(tokens->data[pos]))->ty == '{'){
+                    pos++;
+                    compound_statement();
+                    brackets++;
+                }
+                else{
+                    vec_push(main_code, assign());
+                }
+            }
+            return new_node(TK_IF, lhs, NULL);
+        }
+    }
     if(((Token*)(tokens->data[pos]))->ty == TK_RETURN){
         pos++;
         Node* lhs = assign();
-        ((Token*)(tokens->data[pos]))->ty = TK_EOF;
-        return lhs;
+        return new_node(TK_RETURN, lhs, NULL);
     }
     return assign();
+}
+
+static void compound_statement(){
+    Node *lhs = statement();
+    vec_push(main_code, lhs);
+    if (((Token*)(tokens->data[pos++]))->ty == '}'){
+        brackets--;
+        if (brackets == 0){
+            vec_push(if_component_number, 0);
+        }
+        return;
+    }
+    compound_statement();
 }
 
 static Node* assign(){

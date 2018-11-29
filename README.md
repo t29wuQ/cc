@@ -8,3 +8,11 @@ abc = 8;
 abc1 = a + ab;
 return abc1 + abc;
 ```
+
+```
+a = 3;
+if (a == 3){
+    a = 4;
+}
+return a;
+```
